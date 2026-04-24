@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Page Replacement Algorithm Simulator</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div>
+        <h1>Page Replacement Algorithm Simulator</h1>
+      </div>
+      <div class="subtitle">
+        FIFO • LRU • Optimal | Operating Systems Mini-Project
+      </div>
+    </header>
+
+    <main class="app-body">
+      <section class="panel panel-left">
+        <div class="panel-heading">INPUT</div>
+        <p class="panel-caption">Configure your simulation</p>
+
+        <label for="framesInput">Number of Frames</label>
+        <input id="framesInput" type="text" value="3" />
+
+        <label for="referenceInput">Page Reference String</label>
+        <p class="hint">comma-separated, e.g. 7,0,1,2,0,3,0,4</p>
+        <input id="referenceInput" type="text" value="7,0,1,2,0,3,0,4,2,3,0,3,2" />
+
+        <label>Algorithm</label>
+        <div class="radio-group">
+          <label><input type="radio" name="algo" value="FIFO" checked /> FIFO</label>
+          <label><input type="radio" name="algo" value="LRU" /> LRU</label>
+          <label><input type="radio" name="algo" value="Optimal" /> Optimal</label>
+        </div>
+
+        <div class="section-title">Animation</div>
+        <label class="checkbox-label"><input id="animationToggle" type="checkbox" checked /> Enable step animation</label>
+        <label for="speedInput">Speed (ms per step)</label>
+        <input id="speedInput" type="range" min="100" max="1500" value="600" />
+
+        <button id="runBtn" class="btn btn-primary">Run Simulation</button>
+        <button id="compareBtn" class="btn btn-primary">Compare All Algorithms</button>
+        <button id="resetBtn" class="btn btn-secondary">Reset / Clear</button>
+
+        <div class="divider"></div>
+
+        <div class="panel-heading">LEGEND</div>
+        <div class="legend-item"><span class="legend-swatch hit"></span>Hit</div>
+        <div class="legend-item"><span class="legend-swatch fault"></span>Fault</div>
+        <div class="legend-item"><span class="legend-swatch replaced"></span>Replaced Page</div>
+        <div class="legend-item"><span class="legend-swatch current"></span>Current Page</div>
+
+        <div class="panel-heading">EXPORT</div>
+        <button id="exportCsvBtn" class="btn btn-secondary">Export as CSV</button>
+        <button id="exportTxtBtn" class="btn btn-secondary">Export as Text</button>
+      </section>
+
+      <section class="panel panel-center">
+        <div class="panel-header-row">
+          <div class="panel-heading">STEP-BY-STEP SIMULATION</div>
+          <div class="panel-caption">Each row is one access in the reference string</div>
+        </div>
+
+        <div class="card frame-visualization">
+          <div class="card-title">Memory Frames</div>
+          <div id="frameBoxes" class="frame-boxes">
+            <div class="frame-box"><span>Frame 1</span><strong>-</strong></div>
+            <div class="frame-box"><span>Frame 2</span><strong>-</strong></div>
+            <div class="frame-box"><span>Frame 3</span><strong>-</strong></div>
+          </div>
+        </div>
+
+        <div class="table-wrapper">
+          <table id="stepsTable">
+            <thead id="stepsTableHead">
+              <tr>
+                <th>Step</th>
+                <th>Current Page</th>
+                <th>Frame 1</th>
+                <th>Frame 2</th>
+                <th>Frame 3</th>
+                <th>Result</th>
+                <th>Replaced</th>
+                <th>Explanation</th>
+              </tr>
+            </thead>
+            <tbody id="stepsTableBody">
+              <tr class="fault-row">
+                <td>1</td>
+                <td>7</td>
+                <td>7</td>
+                <td>-</td>
+                <td>-</td>
+                <td>Fault</td>
+                <td>-</td>
+                <td>Page 7 loaded into empty frame</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card explanation-card">
+          <div class="card-title">Explanation</div>
+          <p id="explanationText">Run a simulation to see step-by-step explanations.</p>
+        </div>
+      </section>
+
+      <section class="panel panel-right">
+        <div class="panel-heading">SUMMARY</div>
+        <div class="card summary-card">
+          <table class="summary-table">
+            <thead>
+              <tr><th>Algorithm</th><th>Page Faults</th><th>Hit Ratio</th></tr>
+            </thead>
+            <tbody id="summaryTableBody">
+              <tr><td>FIFO</td><td>8</td><td>23.08%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="bestAlgo" class="best-algo">Best Algorithm: —</div>
+
+        <div class="card performance-card">
+          <div class="card-title">PERFORMANCE</div>
+          <div id="chartPlaceholder" class="chart-placeholder">Bar chart area</div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <div class="panel-heading">COMPARISON (H = Hit, F = Fault)</div>
+      <p class="panel-caption">Side-by-side hit/fault per access for all three algorithms</p>
+      <div class="table-wrapper">
+        <table>
+          <thead id="comparisonHead">
+            <tr><th>Algorithm</th><th>7</th><th>0</th><th>1</th><th>2</th><th>0</th><th>Total Faults</th></tr>
+          </thead>
+          <tbody id="comparisonBody">
+            <tr><td>FIFO</td><td>F</td><td>H</td><td>F</td><td>H</td><td>H</td><td>3</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </footer>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
